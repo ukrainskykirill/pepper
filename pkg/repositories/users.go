@@ -1,6 +1,11 @@
 package repositories
 
-import "github.com/ukrainskykirill/pepper/pkg/database"
+import (
+	"context"
+
+	"github.com/ukrainskykirill/pepper/pkg/database"
+	"github.com/ukrainskykirill/pepper/pkg/types"
+)
 
 type UsersRepository struct {
 	queries *database.Queries
@@ -12,8 +17,15 @@ func NewUserRepository(queries *database.Queries) *UsersRepository{
 	}
 }
 
-func (repo *UsersRepository) CreateUser() {
-	return 
+func (repo *UsersRepository) CreateUser(ctx context.Context, input *types.UserInput) {
+	err := repo.queries.CreateUser(ctx, database.CreateUserParams{
+		Name: input.Name,
+		Login: input.Login,
+		Phone: input.Phone,
+	})
+	if err != nil {
+		println(err)
+	}
 }
 func (repo *UsersRepository) DeleteUser() {
 	return 
