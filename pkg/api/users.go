@@ -29,7 +29,7 @@ func (handler *UsersHandler) createUser(ctx *gin.Context) {
 		ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": err.Error()})
 	} else if errors.As(err, &services.AlreadyExistsByLogin{}) {
 		ctx.JSON(http.StatusConflict, gin.H{"error": err.Error()})
-	} else {
+	} else if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 	}
 }
