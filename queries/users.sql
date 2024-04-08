@@ -16,3 +16,17 @@ INSERT INTO users (
 ) VALUES (
     $1, $2, $3
 );
+
+-- name: IsExistsByLogin :one
+SELECT EXISTS (
+    SELECT 1
+    FROM users
+    WHERE login = $1
+);
+
+-- name: IsExistsById :one
+SELECT EXISTS (
+    SELECT 1
+    FROM users
+    WHERE id = $1
+);

@@ -59,6 +59,36 @@ func (q *Queries) GetUser(ctx context.Context, id uuid.UUID) (User, error) {
 	return i, err
 }
 
+const isExistsById = `-- name: IsExistsById :one
+SELECT EXISTS (
+    SELECT 1
+    FROM users
+    WHERE id = $1
+)
+`
+
+func (q *Queries) IsExistsById(ctx context.Context, id uuid.UUID) (bool, error) {
+	row := q.db.QueryRow(ctx, isExistsById, id)
+	var exists bool
+	err := row.Scan(&exists)
+	return exists, err
+}
+
+const isExistsByLogin = `-- name: IsExistsByLogin :one
+SELECT EXISTS (
+    SELECT 1
+    FROM users
+    WHERE login = $1
+)
+`
+
+func (q *Queries) IsExistsByLogin(ctx context.Context, login string) (bool, error) {
+	row := q.db.QueryRow(ctx, isExistsByLogin, login)
+	var exists bool
+	err := row.Scan(&exists)
+	return exists, err
+}
+
 const listUsers = `-- name: ListUsers :many
 SELECT id, created_at, updated_at, login, name, phone FROM users
 ORDER BY name
