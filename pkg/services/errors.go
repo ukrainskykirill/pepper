@@ -17,4 +17,11 @@ type InvalidInputData struct {
 func (a InvalidInputData) Error() string {
 	return fmt.Sprintf("Invalid input data: %v", a.err)
 }
+type UserDoesntExists struct {
+	err error
+}
+
+func (u UserDoesntExists) Error() string {
+	return fmt.Sprintf("Invalid input data: %v", u.err)
+}
 
