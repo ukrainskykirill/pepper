@@ -1,5 +1,5 @@
 -- name: GetUser :one
-SELECT * FROM users
+SELECT id, name, phone FROM users
 WHERE id = $1 LIMIT 1;
 
 -- name: DeleteUser :exec

@@ -41,21 +41,20 @@ func (q *Queries) DeleteUser(ctx context.Context, id uuid.UUID) error {
 }
 
 const getUser = `-- name: GetUser :one
-SELECT id, created_at, updated_at, login, name, phone FROM users
+SELECT id, name, phone FROM users
 WHERE id = $1 LIMIT 1
 `
 
-func (q *Queries) GetUser(ctx context.Context, id uuid.UUID) (User, error) {
+type GetUserRow struct {
+	ID    uuid.UUID
+	Name  string
+	Phone string
+}
+
+func (q *Queries) GetUser(ctx context.Context, id uuid.UUID) (GetUserRow, error) {
 	row := q.db.QueryRow(ctx, getUser, id)
-	var i User
-	err := row.Scan(
-		&i.ID,
-		&i.CreatedAt,
-		&i.UpdatedAt,
-		&i.Login,
-		&i.Name,
-		&i.Phone,
-	)
+	var i GetUserRow
+	err := row.Scan(&i.ID, &i.Name, &i.Phone)
 	return i, err
 }
 

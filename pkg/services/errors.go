@@ -22,6 +22,6 @@ type UserDoesntExists struct {
 }
 
 func (u UserDoesntExists) Error() string {
-	return fmt.Sprintf("Invalid input data: %v", u.err)
+	return fmt.Sprintf("User doesnt exists: %v", u.err)
 }
 

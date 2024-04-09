@@ -6,7 +6,6 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/ukrainskykirill/pepper/pkg/database"
-	"github.com/ukrainskykirill/pepper/pkg/types"
 )
 
 type UsersRepository struct {
@@ -19,7 +18,7 @@ func NewUserRepository(queries *database.Queries) *UsersRepository{
 	}
 }
 
-func (repo *UsersRepository) CreateUser(ctx context.Context, input *types.UserInput) error {
+func (repo *UsersRepository) CreateUser(ctx context.Context, input *database.CreateUserParams) error {
 	err := repo.queries.CreateUser(ctx, database.CreateUserParams{
 		Name: input.Name,
 		Login: input.Login,
@@ -37,11 +36,15 @@ func (repo *UsersRepository) DeleteUser(ctx context.Context, id uuid.UUID) error
 	}
 	return nil
 }
-func (repo *UsersRepository) GetUser() {
-	return 
+func (repo *UsersRepository) GetUser(ctx context.Context, id uuid.UUID) (database.GetUserRow, error) {
+	user, err := repo.queries.GetUser(ctx, id)
+	if err != nil {
+		return user, fmt.Errorf("error with deliting user: %w", err)
+	}
+	return user, err
+
 }
 func (repo *UsersRepository) UpdateUser() {
-	return 
 }
 func (repo *UsersRepository) IsExistsByLogin(ctx context.Context, login string) (bool, error) {
 	isExists, err := repo.queries.IsExistsByLogin(ctx, login)

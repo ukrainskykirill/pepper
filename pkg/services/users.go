@@ -6,8 +6,8 @@ import (
 
 	vd "github.com/go-playground/validator/v10"
 	"github.com/google/uuid"
+	"github.com/ukrainskykirill/pepper/pkg/database"
 	"github.com/ukrainskykirill/pepper/pkg/repositories"
-	"github.com/ukrainskykirill/pepper/pkg/types"
 )
 
 type UsersService struct {
@@ -22,8 +22,7 @@ func NewUserService(repo *repositories.UsersRepository, validator *vd.Validate) 
 	}
 }
 
-func (service *UsersService) CreateUser(input *types.UserInput) error {
-	ctx := context.Background()
+func (service *UsersService) CreateUser(ctx context.Context, input *database.CreateUserParams) error {
 	if err := service.validator.Struct(input); err != nil {
 		return InvalidInputData{
 			fmt.Errorf("invalid input data %w", err),
@@ -43,8 +42,7 @@ func (service *UsersService) CreateUser(input *types.UserInput) error {
 	return nil
 }
 
-func (service *UsersService) DeleteUser(id uuid.UUID) error {
-	ctx := context.Background()
+func (service *UsersService) DeleteUser(ctx context.Context, id uuid.UUID) error {
 	isExists, err := service.repo.IsExistsById(ctx, id)
 	if err != nil {
 		return err
@@ -58,7 +56,18 @@ func (service *UsersService) DeleteUser(id uuid.UUID) error {
 	}
 	return nil
 }
-func (service *UsersService) GetUser() {
+func (service *UsersService) GetUser(ctx context.Context, id uuid.UUID) (database.GetUserRow, error){
+	isExists, err := service.repo.IsExistsById(ctx, id)
+	if err != nil {
+		return database.GetUserRow{}, err
+	} else if !isExists {
+		return database.GetUserRow{}, UserDoesntExists{
+			fmt.Errorf("user exists by id %s", id),
+		}
+	}
+	user, err := service.repo.GetUser(ctx, id)
+	return user, err
 }
+
 func (service *UsersService) UpdateUser() {
 }
