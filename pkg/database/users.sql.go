@@ -8,7 +8,7 @@ package database
 import (
 	"context"
 
-	"github.com/jackc/pgx/v5/pgtype"
+	"github.com/google/uuid"
 )
 
 const createUser = `-- name: CreateUser :exec
@@ -21,7 +21,7 @@ INSERT INTO users (
 
 type CreateUserParams struct {
 	Login string
-	Name  pgtype.Text
+	Name  *string
 	Phone string
 }
 
@@ -35,32 +35,61 @@ DELETE FROM users
 WHERE id = $1
 `
 
-func (q *Queries) DeleteUser(ctx context.Context, id pgtype.UUID) error {
+func (q *Queries) DeleteUser(ctx context.Context, id uuid.UUID) error {
 	_, err := q.db.Exec(ctx, deleteUser, id)
 	return err
 }
 
 const getUser = `-- name: GetUser :one
-SELECT id, created_at, updated_at, login, name, phone FROM users
+SELECT id, name, phone FROM users
 WHERE id = $1 LIMIT 1
 `
 
-func (q *Queries) GetUser(ctx context.Context, id pgtype.UUID) (User, error) {
+type GetUserRow struct {
+	ID    uuid.UUID
+	Name  *string
+	Phone string
+}
+
+func (q *Queries) GetUser(ctx context.Context, id uuid.UUID) (GetUserRow, error) {
 	row := q.db.QueryRow(ctx, getUser, id)
-	var i User
-	err := row.Scan(
-		&i.ID,
-		&i.CreatedAt,
-		&i.UpdatedAt,
-		&i.Login,
-		&i.Name,
-		&i.Phone,
-	)
+	var i GetUserRow
+	err := row.Scan(&i.ID, &i.Name, &i.Phone)
 	return i, err
 }
 
+const isExistsById = `-- name: IsExistsById :one
+SELECT EXISTS (
+    SELECT 1
+    FROM users
+    WHERE id = $1
+)
+`
+
+func (q *Queries) IsExistsById(ctx context.Context, id uuid.UUID) (bool, error) {
+	row := q.db.QueryRow(ctx, isExistsById, id)
+	var exists bool
+	err := row.Scan(&exists)
+	return exists, err
+}
+
+const isExistsByLogin = `-- name: IsExistsByLogin :one
+SELECT EXISTS (
+    SELECT 1
+    FROM users
+    WHERE login = $1
+)
+`
+
+func (q *Queries) IsExistsByLogin(ctx context.Context, login string) (bool, error) {
+	row := q.db.QueryRow(ctx, isExistsByLogin, login)
+	var exists bool
+	err := row.Scan(&exists)
+	return exists, err
+}
+
 const listUsers = `-- name: ListUsers :many
-SELECT id, created_at, updated_at, login, name, phone FROM users
+SELECT id, created_at, updated_at, login, name, phone, discription FROM users
 ORDER BY name
 `
 
@@ -80,6 +109,7 @@ func (q *Queries) ListUsers(ctx context.Context) ([]User, error) {
 			&i.Login,
 			&i.Name,
 			&i.Phone,
+			&i.Discription,
 		); err != nil {
 			return nil, err
 		}
@@ -89,4 +119,21 @@ func (q *Queries) ListUsers(ctx context.Context) ([]User, error) {
 		return nil, err
 	}
 	return items, nil
+}
+
+const upadateUser = `-- name: UpadateUser :exec
+UPDATE users
+SET name = $1, discription = $2
+WHERE id = $3
+`
+
+type UpadateUserParams struct {
+	Name        *string
+	Discription *string
+	ID          uuid.UUID
+}
+
+func (q *Queries) UpadateUser(ctx context.Context, arg UpadateUserParams) error {
+	_, err := q.db.Exec(ctx, upadateUser, arg.Name, arg.Discription, arg.ID)
+	return err
 }

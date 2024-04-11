@@ -1,5 +1,5 @@
 -- name: GetUser :one
-SELECT * FROM users
+SELECT id, name, phone FROM users
 WHERE id = $1 LIMIT 1;
 
 -- name: DeleteUser :exec
@@ -16,3 +16,22 @@ INSERT INTO users (
 ) VALUES (
     $1, $2, $3
 );
+
+-- name: IsExistsByLogin :one
+SELECT EXISTS (
+    SELECT 1
+    FROM users
+    WHERE login = $1
+);
+
+-- name: IsExistsById :one
+SELECT EXISTS (
+    SELECT 1
+    FROM users
+    WHERE id = $1
+);
+
+-- name: UpadateUser :exec
+UPDATE users
+SET name = $1, discription = $2
+WHERE id = $3;
