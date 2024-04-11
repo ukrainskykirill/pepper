@@ -2,12 +2,13 @@ package api
 
 import (
 	"errors"
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"github.com/ukrainskykirill/pepper/pkg/services"
-	"github.com/ukrainskykirill/pepper/pkg/database"
+	"github.com/ukrainskykirill/pepper/pkg/types"
 )
 
 type UsersHandler struct {
@@ -21,7 +22,7 @@ func NewUsersHandler(service *services.UsersService) *UsersHandler{
 }
 
 func (handler *UsersHandler) createUser(ctx *gin.Context) {
-	var userIn database.CreateUserParams
+	var userIn types.UserInput
 	if err := ctx.ShouldBindJSON(&userIn); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -71,5 +72,21 @@ func (handler *UsersHandler) getUser(ctx *gin.Context) {
 
 }
 func (handler *UsersHandler) updateUser(ctx *gin.Context) {
-	handler.service.UpdateUser()
+	id := ctx.Params.ByName("id")
+	parsedId, err := uuid.Parse(id)
+	if err != nil {
+		ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": err.Error()})
+		return
+	}
+	var userInUpdate types.UserUpdReq
+	if err := ctx.ShouldBind(&userInUpdate); err != nil {
+		fmt.Println("ERROR")
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	}
+	fmt.Println(userInUpdate)
+	handler.service.UpdateUser(ctx.Request.Context(), &types.UserInputUpd{
+		ID: parsedId,
+		Name: userInUpdate.Name,
+		Discription: userInUpdate.Discription,
+	})
 }

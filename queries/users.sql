@@ -30,3 +30,8 @@ SELECT EXISTS (
     FROM users
     WHERE id = $1
 );
+
+-- name: UpadateUser :exec
+UPDATE users
+SET name = $1, discription = $2
+WHERE id = $3;

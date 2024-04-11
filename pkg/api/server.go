@@ -22,7 +22,7 @@ func InitServer(handler *Handler) {
         userRouter.POST("/create", handler.Users.createUser)
         userRouter.DELETE("/:id", handler.Users.deleteUser)
         userRouter.GET("/:id", handler.Users.getUser)
-        userRouter.PUT("/:id", handler.Users.updateUser)
+        userRouter.PATCH("/:id", handler.Users.updateUser)
     }
     mainRouter.Run()
 }

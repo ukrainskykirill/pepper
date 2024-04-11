@@ -6,6 +6,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/ukrainskykirill/pepper/pkg/database"
+	"github.com/ukrainskykirill/pepper/pkg/types"
 )
 
 type UsersRepository struct {
@@ -18,12 +19,8 @@ func NewUserRepository(queries *database.Queries) *UsersRepository{
 	}
 }
 
-func (repo *UsersRepository) CreateUser(ctx context.Context, input *database.CreateUserParams) error {
-	err := repo.queries.CreateUser(ctx, database.CreateUserParams{
-		Name: input.Name,
-		Login: input.Login,
-		Phone: input.Phone,
-	})
+func (repo *UsersRepository) CreateUser(ctx context.Context, input *types.UserInput) error {
+	err := repo.queries.CreateUser(ctx, database.CreateUserParams(*input))
 	if err != nil {
 		return fmt.Errorf("error with creating user: %w", err)
 	}
@@ -44,7 +41,12 @@ func (repo *UsersRepository) GetUser(ctx context.Context, id uuid.UUID) (databas
 	return user, err
 
 }
-func (repo *UsersRepository) UpdateUser() {
+func (repo *UsersRepository) UpdateUser(ctx context.Context, input *types.UserInputUpd) error {
+	err := repo.queries.UpadateUser(ctx, database.UpadateUserParams(*input))
+	if err != nil {
+		return fmt.Errorf("error with deliting user: %w", err)
+	}
+	return nil
 }
 func (repo *UsersRepository) IsExistsByLogin(ctx context.Context, login string) (bool, error) {
 	isExists, err := repo.queries.IsExistsByLogin(ctx, login)

@@ -21,7 +21,7 @@ INSERT INTO users (
 
 type CreateUserParams struct {
 	Login string
-	Name  string
+	Name  *string
 	Phone string
 }
 
@@ -47,7 +47,7 @@ WHERE id = $1 LIMIT 1
 
 type GetUserRow struct {
 	ID    uuid.UUID
-	Name  string
+	Name  *string
 	Phone string
 }
 
@@ -89,7 +89,7 @@ func (q *Queries) IsExistsByLogin(ctx context.Context, login string) (bool, erro
 }
 
 const listUsers = `-- name: ListUsers :many
-SELECT id, created_at, updated_at, login, name, phone FROM users
+SELECT id, created_at, updated_at, login, name, phone, discription FROM users
 ORDER BY name
 `
 
@@ -109,6 +109,7 @@ func (q *Queries) ListUsers(ctx context.Context) ([]User, error) {
 			&i.Login,
 			&i.Name,
 			&i.Phone,
+			&i.Discription,
 		); err != nil {
 			return nil, err
 		}
@@ -118,4 +119,21 @@ func (q *Queries) ListUsers(ctx context.Context) ([]User, error) {
 		return nil, err
 	}
 	return items, nil
+}
+
+const upadateUser = `-- name: UpadateUser :exec
+UPDATE users
+SET name = $1, discription = $2
+WHERE id = $3
+`
+
+type UpadateUserParams struct {
+	Name        *string
+	Discription *string
+	ID          uuid.UUID
+}
+
+func (q *Queries) UpadateUser(ctx context.Context, arg UpadateUserParams) error {
+	_, err := q.db.Exec(ctx, upadateUser, arg.Name, arg.Discription, arg.ID)
+	return err
 }

@@ -6,6 +6,7 @@ import (
 
 	vd "github.com/go-playground/validator/v10"
 	"github.com/google/uuid"
+	"github.com/ukrainskykirill/pepper/pkg/types"
 	"github.com/ukrainskykirill/pepper/pkg/database"
 	"github.com/ukrainskykirill/pepper/pkg/repositories"
 )
@@ -22,7 +23,7 @@ func NewUserService(repo *repositories.UsersRepository, validator *vd.Validate) 
 	}
 }
 
-func (service *UsersService) CreateUser(ctx context.Context, input *database.CreateUserParams) error {
+func (service *UsersService) CreateUser(ctx context.Context, input *types.UserInput) error {
 	if err := service.validator.Struct(input); err != nil {
 		return InvalidInputData{
 			fmt.Errorf("invalid input data %w", err),
@@ -69,5 +70,15 @@ func (service *UsersService) GetUser(ctx context.Context, id uuid.UUID) (databas
 	return user, err
 }
 
-func (service *UsersService) UpdateUser() {
+func (service *UsersService) UpdateUser(ctx context.Context, input *types.UserInputUpd) error {
+	isExists, err := service.repo.IsExistsById(ctx, input.ID)
+	if err != nil {
+		return err
+	} else if !isExists {
+		return UserDoesntExists{
+			fmt.Errorf("user exists by id %s", input.ID),
+		}
+	}
+	err = service.repo.UpdateUser(ctx, input)
+	return err
 }
