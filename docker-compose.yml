@@ -1,6 +1,22 @@
 version: '3.8'
 
+x-postgres-env: &postgres-env
+    POSTGRES_USER: test_user
+    POSTGRES_DB: test_user
+    POSTGRES_PASSWORD: test_password
+
 services:
+  postgres:
+    image: postgres:14-alpine
+    environment:
+        <<: *postgres-env
+    healthcheck:
+        test: ["CMD-SHELL", "pg_isready", "-U", "postgres"]
+        interval: 5s
+        timeout: 3s
+        start_period: 5s
+        retries: 3
+
   app:
     build:
       context: .
@@ -9,7 +25,13 @@ services:
     volumes:
       - .:/app
     environment:
-      - ENVIRONMENT=development
+      <<: [
+          *postgres-env
+        ]
+      ENVIRONMENT: development
+      POSTGRES_DB_NAME: test_user
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
 
   tests:
     build:
@@ -19,4 +41,10 @@ services:
     volumes:
       - .:/app
     environment:
-      - ENVIRONMENT=test
+      <<: [
+          *postgres-env
+        ]
+      ENVIRONMENT: test
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_DB_NAME: test_user
