@@ -9,13 +9,13 @@ type Handler struct {
 	Users *UsersHandler
 }
 
-func NewHandler(services *services.Services) *Handler {
+func NewHandler(services services.IServices) *Handler {
 	return &Handler{
-		Users: NewUsersHandler(services.Users),
+		Users: NewUsersHandler(services.GetUsersService()),
 	}
 }
 
-func InitServer(handler *Handler) {
+func InitServer(handler *Handler) *gin.Engine {
     mainRouter := gin.Default()
     userRouter := mainRouter.Group("/user")
     {
@@ -23,6 +23,7 @@ func InitServer(handler *Handler) {
         userRouter.DELETE("/:id", handler.Users.deleteUser)
         userRouter.GET("/:id", handler.Users.getUser)
         userRouter.PATCH("/:id", handler.Users.updateUser)
+        userRouter.GET("/ping", handler.Users.ping)
     }
-    mainRouter.Run()
+    return mainRouter
 }

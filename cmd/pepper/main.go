@@ -17,5 +17,6 @@ func main() {
 	repositories := repositories.NewRepositories(queries)
 	services := services.NewServices(repositories, validator)
 	handlers := api.NewHandler(services)
-	api.InitServer(handlers)
+	router := api.InitServer(handlers)
+	router.Run()
 }

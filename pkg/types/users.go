@@ -1,11 +1,13 @@
 package types
 
-import "github.com/google/uuid"
+import (
+	"github.com/google/uuid"
+)
 
 type UserInput struct {
-	Login string `json:"login" binding:"required"`
-	Name *string `json:"name"`
-	Phone string `json:"phone" binding:"required" validate:"phone"`
+	Login string `json:"login" binding:"required" fake:"{regex:^[a-z]{1,15}$}"`
+	Name *string `json:"name" fake:"{regex:^[a-z]{1,15}$}"`
+	Phone string `json:"phone" binding:"required" validate:"phone" fake:"{regex:7910\\d{7}$}"`
 }
 
 type UserInputUpd struct {

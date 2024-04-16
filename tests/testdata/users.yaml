@@ -1,0 +1,13 @@
+- id: RAW=uuid_generate_v4()
+  created_at: RAW=NOW()
+  updated_at: RAW=NOW()
+  login: johndoe
+  name: John Doe
+  phone: 79158965662
+
+- id: "4d9db4cd-78d4-4fea-8d66-bfc146f58608"
+  created_at: RAW=NOW()
+  updated_at: RAW=NOW()
+  login: johndoe2
+  name: John Doe 2
+  phone: 79158965663

@@ -18,7 +18,9 @@ type Config struct {
 
 func NewConfig() *Config{
 	if err := godotenv.Load(); err != nil {
-		fmt.Print("No .env file found")
+		if err := godotenv.Load("/Users/killreal/vsc_projects/pepper/tests/.env.test"); err != nil {
+			fmt.Print("No .env file found")
+		}
 	}
 	return &Config{
 		PostgresUser: os.Getenv("POSTGRES_USER"),

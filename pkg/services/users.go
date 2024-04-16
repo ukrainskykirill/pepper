@@ -11,12 +11,19 @@ import (
 	"github.com/ukrainskykirill/pepper/pkg/repositories"
 )
 
+type IUsersService interface {
+	CreateUser(ctx context.Context, input *types.UserInput) error
+	GetUser(ctx context.Context, id uuid.UUID) (database.GetUserRow, error)
+	UpdateUser(ctx context.Context, input *types.UserInputUpd) error
+	DeleteUser(ctx context.Context, id uuid.UUID) error
+}
+
 type UsersService struct {
 	repo *repositories.UsersRepository
 	validator *vd.Validate
 }
 
-func NewUserService(repo *repositories.UsersRepository, validator *vd.Validate) *UsersService{
+func NewUserService(repo *repositories.UsersRepository, validator *vd.Validate) IUsersService{
 	return &UsersService{
 		repo: repo,
 		validator: validator,

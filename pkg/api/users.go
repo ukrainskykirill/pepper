@@ -2,7 +2,6 @@ package api
 
 import (
 	"errors"
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -12,13 +11,17 @@ import (
 )
 
 type UsersHandler struct {
-	service *services.UsersService
+	service services.IUsersService
 }
 
-func NewUsersHandler(service *services.UsersService) *UsersHandler{
+func NewUsersHandler(service services.IUsersService) *UsersHandler{
 	return &UsersHandler{
 		service: service,
 	}
+}
+
+func (handler *UsersHandler) ping(ctx *gin.Context) {
+	ctx.String(200, "pong")
 }
 
 func (handler *UsersHandler) createUser(ctx *gin.Context) {
@@ -80,10 +83,8 @@ func (handler *UsersHandler) updateUser(ctx *gin.Context) {
 	}
 	var userInUpdate types.UserUpdReq
 	if err := ctx.ShouldBind(&userInUpdate); err != nil {
-		fmt.Println("ERROR")
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 	}
-	fmt.Println(userInUpdate)
 	handler.service.UpdateUser(ctx.Request.Context(), &types.UserInputUpd{
 		ID: parsedId,
 		Name: userInUpdate.Name,
