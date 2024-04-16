@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: go run cmd/pepper/main.go
+    volumes:
+      - .:/app
+    environment:
+      - ENVIRONMENT=development
+
+  tests:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: go test ./tests
+    volumes:
+      - .:/app
+    environment:
+      - ENVIRONMENT=test
