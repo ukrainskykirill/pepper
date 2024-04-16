@@ -9,7 +9,7 @@ import (
 )
 
 func TestPingPongRoute(t *testing.T) {
-	prepareTestDatabase()
+	// prepareTestDatabase()
 	w := httptest.NewRecorder()
 	req, _ := http.NewRequest("GET", "/user/ping", nil)
 	testRouter.ServeHTTP(w, req)
