@@ -1,13 +1,18 @@
 package types
 
 import (
+	"fmt"
+
 	"github.com/dongri/phonenumber"
 	"github.com/go-playground/validator/v10"
 )
 
 func NewValidator() *validator.Validate {
 	validatorInstance := validator.New()
-	validatorInstance.RegisterValidation("phone", validatePhone)
+	err := validatorInstance.RegisterValidation("phone", validatePhone)
+	if err != nil {
+		fmt.Println(err)
+	}
 	return validatorInstance
 }
 

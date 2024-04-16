@@ -1,11 +1,13 @@
 package main
 
 import (
+	"fmt"
+
 	"github.com/ukrainskykirill/pepper/pkg/api"
+	"github.com/ukrainskykirill/pepper/pkg/config"
+	"github.com/ukrainskykirill/pepper/pkg/database"
 	"github.com/ukrainskykirill/pepper/pkg/repositories"
 	"github.com/ukrainskykirill/pepper/pkg/services"
-	"github.com/ukrainskykirill/pepper/pkg/database"
-	"github.com/ukrainskykirill/pepper/pkg/config"
 	"github.com/ukrainskykirill/pepper/pkg/types"
 )
 
@@ -18,5 +20,8 @@ func main() {
 	services := services.NewServices(repositories, validator)
 	handlers := api.NewHandler(services)
 	router := api.InitServer(handlers)
-	router.Run()
+	err := router.Run()
+	if err != nil {
+		fmt.Println(err)
+	}
 }
