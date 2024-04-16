@@ -20,7 +20,6 @@ func NewUserRepository(queries *database.Queries) *UsersRepository{
 }
 
 func (repo *UsersRepository) CreateUser(ctx context.Context, input *types.UserInput) error {
-	fmt.Println("create user")
 	err := repo.queries.CreateUser(ctx, database.CreateUserParams(*input))
 	if err != nil {
 		return fmt.Errorf("error with creating user: %w", err)
@@ -50,11 +49,7 @@ func (repo *UsersRepository) UpdateUser(ctx context.Context, input *types.UserIn
 	return nil
 }
 func (repo *UsersRepository) IsExistsByLogin(ctx context.Context, login string) (bool, error) {
-	fmt.Println("_-----")
 	isExists, err := repo.queries.IsExistsByLogin(ctx, login)
-	fmt.Println(isExists)
-	fmt.Println(err)
-	fmt.Println("_-----")
 	if err != nil {
 		return isExists, fmt.Errorf("failed to do db request IsExistsByLogin: %w", err)
 	}
