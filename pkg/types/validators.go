@@ -10,9 +10,6 @@ import (
 func NewValidator() *validator.Validate {
 	validatorInstance := validator.New()
 	err := validatorInstance.RegisterValidation("phone", validatePhone)
-	if err != nil {
-		fmt.Println(err)
-	}
 	return validatorInstance
 }
 
