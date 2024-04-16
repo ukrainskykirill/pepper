@@ -11,12 +11,19 @@ import (
 	"github.com/ukrainskykirill/pepper/pkg/repositories"
 )
 
+type IUsersService interface {
+	CreateUser(ctx context.Context, input *types.UserInput) error
+	GetUser(ctx context.Context, id uuid.UUID) (database.GetUserRow, error)
+	UpdateUser(ctx context.Context, input *types.UserInputUpd) error
+	DeleteUser(ctx context.Context, id uuid.UUID) error
+}
+
 type UsersService struct {
 	repo *repositories.UsersRepository
 	validator *vd.Validate
 }
 
-func NewUserService(repo *repositories.UsersRepository, validator *vd.Validate) *UsersService{
+func NewUserService(repo *repositories.UsersRepository, validator *vd.Validate) IUsersService{
 	return &UsersService{
 		repo: repo,
 		validator: validator,
@@ -25,10 +32,12 @@ func NewUserService(repo *repositories.UsersRepository, validator *vd.Validate) 
 
 func (service *UsersService) CreateUser(ctx context.Context, input *types.UserInput) error {
 	if err := service.validator.Struct(input); err != nil {
+		fmt.Println(err)
 		return InvalidInputData{
 			fmt.Errorf("invalid input data %w", err),
 		}
 	}
+	fmt.Println("valid")
 	isExists, err := service.repo.IsExistsByLogin(ctx, input.Login)
 	if err != nil {
 		return err
@@ -37,6 +46,7 @@ func (service *UsersService) CreateUser(ctx context.Context, input *types.UserIn
 			fmt.Errorf("already exists by login %s", input.Login),
 		}
 	}
+	fmt.Println("___!!!!_____")
 	if err := service.repo.CreateUser(ctx, input); err != nil {
 		return err
 	}
@@ -58,6 +68,8 @@ func (service *UsersService) DeleteUser(ctx context.Context, id uuid.UUID) error
 	return nil
 }
 func (service *UsersService) GetUser(ctx context.Context, id uuid.UUID) (database.GetUserRow, error){
+	fmt.Println("get user")
+	fmt.Println(id)
 	isExists, err := service.repo.IsExistsById(ctx, id)
 	if err != nil {
 		return database.GetUserRow{}, err

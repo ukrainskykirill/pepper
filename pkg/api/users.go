@@ -12,13 +12,17 @@ import (
 )
 
 type UsersHandler struct {
-	service *services.UsersService
+	service services.IUsersService
 }
 
-func NewUsersHandler(service *services.UsersService) *UsersHandler{
+func NewUsersHandler(service services.IUsersService) *UsersHandler{
 	return &UsersHandler{
 		service: service,
 	}
+}
+
+func (handler *UsersHandler) ping(ctx *gin.Context) {
+	ctx.String(200, "pong")
 }
 
 func (handler *UsersHandler) createUser(ctx *gin.Context) {
