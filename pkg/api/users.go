@@ -3,6 +3,7 @@ package api
 import (
 	"errors"
 	"net/http"
+	"fmt"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
@@ -85,9 +86,12 @@ func (handler *UsersHandler) updateUser(ctx *gin.Context) {
 	if err := ctx.ShouldBind(&userInUpdate); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 	}
-	handler.service.UpdateUser(ctx.Request.Context(), &types.UserInputUpd{
+	err = handler.service.UpdateUser(ctx.Request.Context(), &types.UserInputUpd{
 		ID: parsedId,
 		Name: userInUpdate.Name,
 		Discription: userInUpdate.Discription,
 	})
+	if err != nil {
+		fmt.Println(err)
+	}
 }
