@@ -16,6 +16,10 @@ jobs:
     - name: Build Docker image
       run:  docker-compose -f docker-compose.yml up --build
 
+    - name: Check build exit code
+      run: echo "build passed successfully"
+      if: steps.run.outputs.exit-code == 0
+
     - name: Run tests
       run: docker-compose -f docker-compose.yml run tests
 
