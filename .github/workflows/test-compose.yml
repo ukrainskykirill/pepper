@@ -17,4 +17,4 @@ jobs:
       run:  docker-compose -f docker-compose.yml up -d
 
     - name: Run Tests in app service
-      run: docker-compose -f docker-compose.yml exec app bash -c 'cd pepper/tests && go test -v'
+      run: docker-compose -f docker-compose.yml exec app sh -c 'cd pepper/tests && go test -v'
