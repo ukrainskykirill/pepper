@@ -16,8 +16,5 @@ jobs:
     - name: Build Docker image
       run:  docker-compose -f docker-compose.yml up -d
 
-    - name: Run tests
-      run: docker-compose -f docker-compose.yml run tests
-
     - name: Run Tests in app service
       run: docker-compose -f docker-compose.yml exec app cd tests/ || go test -v
