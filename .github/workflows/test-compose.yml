@@ -18,4 +18,9 @@ jobs:
 
     - name: Run tests
       run: docker-compose -f docker-compose.yml run tests
+      
+    - name: Check test exit code
+      run: echo "Tests passed successfully"
+      if: steps.run tests.outputs.exit-code == 0
+
 
