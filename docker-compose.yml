@@ -12,12 +12,6 @@ services:
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     environment:
         <<: *postgres-env
-    healthcheck:
-        test: ["CMD-SHELL", "pg_isready", "-d", "test_user", "-U", "test_user"]
-        interval: 5s
-        timeout: 3s
-        start_period: 5s
-        retries: 3
 
   app:
     depends_on:
