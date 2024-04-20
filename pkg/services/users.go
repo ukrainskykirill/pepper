@@ -44,7 +44,7 @@ func (service *UsersService) CreateUser(ctx context.Context, input *types.UserIn
 			fmt.Errorf("already exists by login %s", input.Login),
 		}
 	}
-	if err := service.repo.CreateUser(ctx, input); err != nil {
+	if err := service.repo.CreateUsers(ctx, input); err != nil {
 		return err
 	}
 	return nil

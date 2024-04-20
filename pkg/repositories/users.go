@@ -19,7 +19,7 @@ func NewUserRepository(queries *database.Queries) *UsersRepository{
 	}
 }
 
-func (repo *UsersRepository) CreateUser(ctx context.Context, input *types.UserInput) error {
+func (repo *UsersRepository) CreateUsers(ctx context.Context, input *types.UserInput) error {
 	err := repo.queries.CreateUser(ctx, database.CreateUserParams(*input))
 	if err != nil {
 		return fmt.Errorf("error with creating user: %w", err)
