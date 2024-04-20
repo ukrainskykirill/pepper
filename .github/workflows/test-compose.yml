@@ -16,5 +16,16 @@ jobs:
     - name: Build Docker image
       run:  docker-compose -f docker-compose.yml up
 
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Docker
+      uses: docker/setup-buildx-action@v3
+
     - name: Run tests
       run: docker-compose -f docker-compose.yml run tests
+
