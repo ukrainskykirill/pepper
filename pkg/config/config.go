@@ -25,7 +25,7 @@ func NewConfig() *Config{
 	return &Config{
 		PostgresUser: os.Getenv("POSTGRES_USER"),
 		PostgresPassword: os.Getenv("POSTGRES_PASSWORD"),
-		PostgresDBName: os.Getenv("POSTGRES_DB_NAME"),
+		PostgresDBName: os.Getenv("POSTGRES_DB"),
 		PostgresSSLMode: os.Getenv("POSTGRES_SSL_MODE"),
 		PostgresHost: os.Getenv("POSTGRES_HOST"),
 		PostgresPort: os.Getenv("POSTGRES_PORT"),

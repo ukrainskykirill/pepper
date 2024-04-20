@@ -8,8 +8,6 @@ x-postgres-env: &postgres-env
 services:
   postgres:
     image: postgres:14-alpine
-    volumes:
-      - /var/run/postgresql:/var/run/postgresql
     environment:
         <<: *postgres-env
     healthcheck:
@@ -31,10 +29,9 @@ services:
           *postgres-env
         ]
       ENVIRONMENT: development
-      POSTGRES_DB_NAME: test_user
       POSTGRES_HOST: postgres
       POSTGRES_PORT: 5432
-      PGDATA: /var/run/postgresql
+      POSTGRES_SSL_MODE: 'false'
 
   tests:
     build:
