@@ -38,6 +38,7 @@ func (handler *UsersHandler) createUser(ctx *gin.Context) {
 		ctx.JSON(http.StatusConflict, gin.H{"error": err.Error()})
 		return
 	} else if err != nil {
+		fmt.Println(err.Error())
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}

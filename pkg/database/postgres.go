@@ -13,11 +13,11 @@ func NewPostgresPool(config *config.Config) *pgxpool.Pool{
 	db, err := pgxpool.New(
 		ctx, 
 		fmt.Sprintf(
-			"user=%s password=%s dbname=%s sslmode=%s host=%s port=%s",
+			"user=%s password=%s dbname=%s host=%s port=%s",
 			config.PostgresUser, 
 			config.PostgresPassword,
 			config.PostgresDBName,
-			config.PostgresSSLMode, 
+			// config.PostgresSSLMode, 
 			config.PostgresHost,
 			config.PostgresPort,
 		),

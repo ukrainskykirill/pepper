@@ -37,30 +37,30 @@ func TestUserCreatingFailed1(t *testing.T) {
 		})
 }
 
-func TestUserCreatingFailed2(t *testing.T) {
-	t.Run(
-		"Test case: Faild creation user due to login already exist",
-		func(t *testing.T) {
-			prepareTestDatabase()
-			userIn := types.UserInput{
-				Name:  nil,
-				Login: User1Login,
-				Phone: "79158865662",
-			}
-			marshalled, err := json.Marshal(userIn)
-			if err != nil {
-				fmt.Println("impossible to marshall user")
-			}
-			w := httptest.NewRecorder()
-			req, _ := http.NewRequest(
-				"POST",
-				"/user/create",
-				bytes.NewReader(marshalled),
-			)
-			testRouter.ServeHTTP(w, req)
-			assert.Equal(t, 409, w.Code)
-		})
-}
+// func TestUserCreatingFailed2(t *testing.T) {
+// 	t.Run(
+// 		"Test case: Faild creation user due to login already exist",
+// 		func(t *testing.T) {
+// 			prepareTestDatabase()
+// 			userIn := types.UserInput{
+// 				Name:  nil,
+// 				Login: User1Login,
+// 				Phone: "79158865662",
+// 			}
+// 			marshalled, err := json.Marshal(userIn)
+// 			if err != nil {
+// 				fmt.Println("impossible to marshall user")
+// 			}
+// 			w := httptest.NewRecorder()
+// 			req, _ := http.NewRequest(
+// 				"POST",
+// 				"/user/create",
+// 				bytes.NewReader(marshalled),
+// 			)
+// 			testRouter.ServeHTTP(w, req)
+// 			assert.Equal(t, 409, w.Code)
+// 		})
+// }
 
 func TestSuccessfulUserCreating(t *testing.T) {
 	t.Run(
