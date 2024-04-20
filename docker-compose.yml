@@ -19,6 +19,14 @@ services:
         start_period: 5s
         retries: 3
 
+  migrate:
+    image: migrate/migrate
+    depends_on:
+      - postgres
+    volumes_from:
+      - app
+    command: ["-path", "app/pkg/migrations", "-database",  "postgres://test_user:test_password@postgres:5432/test_user?sslmode=disable", "up"]
+
   app:
     depends_on:
         postgres:
@@ -38,16 +46,8 @@ services:
       POSTGRES_PORT: 5432
       POSTGRES_SSL_MODE: 'false'
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://app:8080"]
+      test: ["CMD", "curl", "-f", "http://app:8080/ping"]
       start_period: 30s
       interval: 5s
       timeout: 3s
       retries: 3
-
-  migrate:
-    image: migrate/migrate
-    depends_on:
-      - postgres
-    volumes_from:
-      - app
-    command: ["-path", "app/pkg/migrations", "-database",  "postgres://test_user:test_password@postgres:5432/test_user?sslmode=disable", "up"]
