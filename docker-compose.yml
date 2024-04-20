@@ -46,7 +46,7 @@ services:
       POSTGRES_PORT: 5432
       POSTGRES_SSL_MODE: 'false'
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://app:8080/user/ping"]
+      test: ["CMD", "curl", "-f", "http://localhost:8080/user/ping"]
       start_period: 30s
       interval: 5s
       timeout: 3s
