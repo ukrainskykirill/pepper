@@ -52,9 +52,9 @@ func TestMain(m *testing.M) {
 	os.Exit(exitVal)
 }
 
-// func prepareTestDatabase() {
-// 	if err := fixtures.Load(); err != nil {
-// 		fmt.Println("failed prepareTestDatabase")
-// 	}
-// 	fmt.Println("prepareTestDatabase")
-// }
+func prepareTestDatabase() {
+	if err := fixtures.Load(); err != nil {
+		fmt.Println("failed prepareTestDatabase")
+	}
+	fmt.Println("prepareTestDatabase")
+}
