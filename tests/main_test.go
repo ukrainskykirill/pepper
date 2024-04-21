@@ -27,7 +27,7 @@ var (
 
 func TestMain(m *testing.M) {
 	var err error
-	db, err = sql.Open("postgres", "user=postgres password=postgres dbname=pepper_test sslmode=disable host=localhost port=32432")
+	db, err = sql.Open("postgres", "user=test_user password=test_password dbname=test_user sslmode=enable host=postgres port=5432")
 	if err != nil {
 		fmt.Println("error sql open")
 	}
