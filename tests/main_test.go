@@ -27,7 +27,7 @@ var (
 
 func TestMain(m *testing.M) {
 	var err error
-	db, err = sql.Open("postgres", "user=postgres password=postgres dbname=pepper_test sslmode=disable host=localhost port=32432")
+	db, err = sql.Open("postgres", "user=test_user password=test_password dbname=test_user sslmode=disable host=postgres port=5432")
 	if err != nil {
 		fmt.Println("error sql open")
 	}
@@ -37,6 +37,7 @@ func TestMain(m *testing.M) {
 		testfixtures.Files("testdata/users.yaml"),
 	)
 	if err != nil {
+		fmt.Println(err)
 		fmt.Println("error sql conntext")
 	}
 	config := config.NewConfig()
@@ -52,9 +53,9 @@ func TestMain(m *testing.M) {
 	os.Exit(exitVal)
 }
 
-// func prepareTestDatabase() {
-// 	if err := fixtures.Load(); err != nil {
-// 		fmt.Println("failed prepareTestDatabase")
-// 	}
-// 	fmt.Println("prepareTestDatabase")
-// }
+func prepareTestDatabase() {
+	if err := fixtures.Load(); err != nil {
+		fmt.Println("failed prepareTestDatabase")
+	}
+	fmt.Println("prepareTestDatabase")
+}
