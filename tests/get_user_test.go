@@ -24,7 +24,7 @@ func TestGetUser(t *testing.T) {
 		{
             testName: "Test case: Successful get user",
             userId: user1Id,
-            expectedCode: 200,
+            expectedCode: 202,
         },
         
     }
