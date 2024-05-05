@@ -53,7 +53,6 @@ func TestUserCreatingFailed(t *testing.T) {
                 "/user/create",
                 bytes.NewReader(marshalled),
             )
-
             testRouter.ServeHTTP(w, req)
             assert.Equal(t, tc.expectedCode, w.Code)
         })
