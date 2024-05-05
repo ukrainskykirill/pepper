@@ -54,7 +54,6 @@ func TestMain(m *testing.M) {
 		testfixtures.Files("testdata/users.yaml"),
 	)
 	if err != nil {
-		fmt.Println(err)
 		fmt.Println("error sql conntext")
 	}
 	exitVal := m.Run()
