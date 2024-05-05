@@ -11,9 +11,34 @@ import (
 
 func TestGetUser(t *testing.T) {
 	prepareTestDatabase()
-	w := httptest.NewRecorder()
-	url := fmt.Sprintf("/user/%s", User1Id)
-	req, _ := http.NewRequest("GET", url, nil)
-	testRouter.ServeHTTP(w, req)
-	assert.Equal(t, 202, w.Code)
+	testCases := []struct {
+        testName   string
+        userId  string
+        expectedCode int
+    }{
+        {
+            testName: "Test case: Faild get user due to invalid uuid",
+            userId: "User1Id",
+            expectedCode: 422,
+        },
+		{
+            testName: "Test case: Successful get user",
+            userId: user1Id,
+            expectedCode: 202,
+        },
+        
+    }
+	for _, tc := range testCases {
+        t.Run(tc.testName, func(t *testing.T) {
+            w := httptest.NewRecorder()
+			url := fmt.Sprintf("/user/%s", tc.userId)
+            req, _ := http.NewRequest(
+                "GET",
+                url,
+                nil,
+            )
+            testRouter.ServeHTTP(w, req)
+            assert.Equal(t, tc.expectedCode, w.Code)
+        })
+    }
 }

@@ -20,14 +20,31 @@ import (
 var (
 	db         *sql.DB
 	fixtures   *testfixtures.Loader
-	User1Login string = "johndoe"
-	User1Id    string = "4d9db4cd-78d4-4fea-8d66-bfc146f58608"
+	user1Id    string = "4d9db4cd-78d4-4fea-8d66-bfc146f58608"
 	testRouter *gin.Engine
 )
 
 func TestMain(m *testing.M) {
 	var err error
-	db, err = sql.Open("postgres", "user=test_user password=test_password dbname=test_user sslmode=disable host=postgres port=5432")
+	config := config.NewConfig()
+	validator := types.NewValidator()
+	db_con := database.NewPostgresPool(config)
+	queries := database.New(db_con)
+	repositories := repositories.NewRepositories(queries)
+	services := services.NewServices(repositories, validator)
+	handlers := api.NewHandler(services)
+	testRouter = api.InitServer(handlers)
+	db , err = sql.Open(
+		"postgres", 
+		fmt.Sprintf(
+			"user=%s password=%s dbname=%s sslmode=disable host=%s port=%s",
+			config.PostgresUser, 
+			config.PostgresPassword,
+			config.PostgresDB,
+			config.PostgresHost,
+			config.PostgresPort,
+		),
+	)
 	if err != nil {
 		fmt.Println("error sql open")
 	}
@@ -37,19 +54,9 @@ func TestMain(m *testing.M) {
 		testfixtures.Files("testdata/users.yaml"),
 	)
 	if err != nil {
-		fmt.Println(err)
 		fmt.Println("error sql conntext")
 	}
-	config := config.NewConfig()
-	validator := types.NewValidator()
-	db := database.NewPostgresPool(config)
-	queries := database.New(db)
-	repositories := repositories.NewRepositories(queries)
-	services := services.NewServices(repositories, validator)
-	handlers := api.NewHandler(services)
-	testRouter = api.InitServer(handlers)
 	exitVal := m.Run()
-	fmt.Println("Do stuff AFTER the tests!")
 	os.Exit(exitVal)
 }
 

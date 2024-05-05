@@ -10,8 +10,7 @@ import (
 type Config struct {
 	PostgresUser string
 	PostgresPassword string
-	PostgresDBName string
-	// PostgresSSLMode string
+	PostgresDB string
 	PostgresHost string
 	PostgresPort string
 }
@@ -25,8 +24,7 @@ func NewConfig() *Config{
 	return &Config{
 		PostgresUser: os.Getenv("POSTGRES_USER"),
 		PostgresPassword: os.Getenv("POSTGRES_PASSWORD"),
-		PostgresDBName: os.Getenv("POSTGRES_DB"),
-		// PostgresSSLMode: os.Getenv("POSTGRES_SSL_MODE"),
+		PostgresDB: os.Getenv("POSTGRES_DB"),
 		PostgresHost: os.Getenv("POSTGRES_HOST"),
 		PostgresPort: os.Getenv("POSTGRES_PORT"),
 	}
